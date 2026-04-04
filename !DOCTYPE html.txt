@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vivek Seth – Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=Clash+Display:wght@400;500;600;700&family=Cabinet+Grotesk:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+/* ── Reset & Base ───────────────────────────── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+:root{
+  --bg:#07080f;
+  --bg2:#0e0f1a;
+  --bg3:#161726;
+  --accent:#00e5ff;
+  --accent2:#7c5cfc;
+  --accent3:#ff6b6b;
+  --text:#eef0f8;
+  --muted:#6e7191;
+  --muted2:#9b9dc0;
+  --border:rgba(124,92,252,0.15);
+  --border2:rgba(0,229,255,0.12);
+  --card:rgba(14,15,26,0.85);
+  --grad:linear-gradient(135deg,#7c5cfc,#00e5ff);
+}
+body{font-family:'Cabinet Grotesk',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;cursor:none}
+
+/* ── Custom Cursor ──────────────────────────── */
+.cursor{position:fixed;width:10px;height:10px;border-radius:50%;background:var(--accent);pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:transform .1s,width .2s,height .2s;mix-blend-mode:difference}
+.cursor-ring{position:fixed;width:36px;height:36px;border-radius:50%;border:1px solid rgba(0,229,255,0.5);pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:transform .12s ease-out,width .25s,height .25s;mix-blend-mode:difference}
+
+/* ── Noise Overlay ──────────────────────────── */
+body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:9990;opacity:.6}
+
+/* ── Scrollbar ──────────────────────────────── */
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--accent2);border-radius:4px}
+
+/* ── NAV ────────────────────────────────────── */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:0 3rem;height:60px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);background:rgba(7,8,15,0.75);backdrop-filter:blur(20px)}
+.nav-logo{font-family:'Clash Display',sans-serif;font-size:22px;font-weight:700;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:-1px}
+.nav-links{display:flex;gap:2rem;list-style:none}
+.nav-links a{font-size:13px;font-weight:500;color:var(--muted2);text-decoration:none;letter-spacing:.06em;transition:color .2s;position:relative}
+.nav-links a::after{content:'';position:absolute;bottom:-2px;left:0;width:0;height:1px;background:var(--accent);transition:width .3s}
+.nav-links a:hover{color:var(--accent)}
+.nav-links a:hover::after{width:100%}
+
+/* ── HERO ───────────────────────────────────── */
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:6rem 3rem 3rem;position:relative;overflow:hidden}
+.hero-grid-line{position:absolute;background:var(--border);pointer-events:none}
+.hero-grid-line.v{width:1px;top:0;bottom:0}
+.hero-grid-line.h{height:1px;left:0;right:0}
+.gl1{left:20%}.gl2{left:80%}.gl3{top:30%}.gl4{top:70%}
+
+.hero-eyebrow{display:flex;align-items:center;gap:12px;margin-bottom:1.5rem;opacity:0;animation:fadeUp .8s .2s forwards}
+.eyebrow-dot{width:8px;height:8px;border-radius:50%;background:var(--accent);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(0,229,255,.4)}50%{box-shadow:0 0 0 10px rgba(0,229,255,0)}}
+.eyebrow-text{font-size:12px;font-weight:500;letter-spacing:.2em;color:var(--muted2);text-transform:uppercase}
+
+.hero-name{font-family:'Clash Display',sans-serif;font-size:clamp(3.5rem,10vw,8rem);font-weight:700;line-height:.95;letter-spacing:-4px;margin-bottom:.6rem;opacity:0;animation:fadeUp .8s .4s forwards}
+.hero-name .line2{display:inline-flex;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+
+.hero-tagline{font-size:clamp(1rem,2.5vw,1.3rem);font-weight:300;color:var(--muted2);letter-spacing:.02em;margin-bottom:1.5rem;opacity:0;animation:fadeUp .8s .6s forwards}
+.hero-tagline span{color:var(--accent2);font-weight:500}
+
+.hero-bio{max-width:520px;font-size:15px;line-height:1.8;color:var(--muted);margin-bottom:2.5rem;opacity:0;animation:fadeUp .8s .75s forwards}
+
+.hero-cta{display:flex;gap:14px;flex-wrap:wrap;opacity:0;animation:fadeUp .8s .9s forwards}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 26px;border-radius:6px;font-size:14px;font-weight:500;cursor:pointer;text-decoration:none;transition:all .25s;font-family:'Cabinet Grotesk',sans-serif;letter-spacing:.02em}
+.btn-primary{background:var(--grad);color:#fff;border:none;position:relative;overflow:hidden}
+.btn-primary::after{content:'';position:absolute;inset:0;background:rgba(255,255,255,0);transition:background .2s}
+.btn-primary:hover::after{background:rgba(255,255,255,.1)}
+.btn-ghost{background:transparent;color:var(--muted2);border:1px solid var(--border)}
+.btn-ghost:hover{color:var(--text);border-color:rgba(0,229,255,.35);background:rgba(0,229,255,.04)}
+
+.hero-scroll-hint{position:absolute;bottom:2.5rem;right:3rem;writing-mode:vertical-rl;font-size:11px;letter-spacing:.18em;color:var(--muted);text-transform:uppercase;opacity:0;animation:fadeIn 1s 1.5s forwards;display:flex;align-items:center;gap:10px}
+.hero-scroll-hint::after{content:'';width:1px;height:50px;background:linear-gradient(transparent,var(--accent))}
+
+/* ── AMBIENT BLOBS ──────────────────────────── */
+.blob{position:absolute;border-radius:50%;filter:blur(80px);pointer-events:none;animation:drift 8s ease-in-out infinite alternate}
+.blob1{width:500px;height:500px;background:rgba(124,92,252,.07);top:-100px;right:-100px}
+.blob2{width:400px;height:400px;background:rgba(0,229,255,.05);bottom:0;left:0;animation-delay:-4s}
+@keyframes drift{from{transform:translate(0,0) scale(1)}to{transform:translate(30px,20px) scale(1.05)}}
+
+/* ── SECTION BASE ───────────────────────────── */
+.section{padding:5rem 3rem;max-width:1000px;margin:0 auto}
+.section-header{margin-bottom:3rem}
+.section-label{font-size:11px;font-weight:700;letter-spacing:.22em;color:var(--accent);text-transform:uppercase;margin-bottom:.5rem;display:flex;align-items:center;gap:10px}
+.section-label::before{content:'';width:24px;height:1px;background:var(--accent)}
+.section-title{font-family:'Clash Display',sans-serif;font-size:clamp(1.8rem,4vw,2.8rem);font-weight:700;letter-spacing:-1.5px;line-height:1.1}
+.divider{height:1px;background:var(--border);margin:0}
+
+/* ── ABOUT ──────────────────────────────────── */
+.about-grid{display:grid;grid-template-columns:1.2fr 1fr;gap:3rem;align-items:start}
+.about-intro{font-size:15px;line-height:1.9;color:var(--muted2)}
+.about-intro p{margin-bottom:1rem}
+.about-intro strong{color:var(--text);font-weight:500}
+.about-cards{display:grid;grid-template-columns:1fr 1fr;gap:.8rem}
+.info-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:1rem 1.2rem}
+.info-card .label{font-size:10px;letter-spacing:.15em;color:var(--muted);text-transform:uppercase;margin-bottom:.3rem}
+.info-card .value{font-size:14px;font-weight:500;color:var(--text)}
+.info-card .value.accent{color:var(--accent)}
+
+/* ── EDUCATION ──────────────────────────────── */
+.education-timeline{position:relative;padding-left:2rem}
+.education-timeline::before{content:'';position:absolute;left:0;top:8px;bottom:8px;width:1px;background:linear-gradient(to bottom,var(--accent2),var(--accent),transparent)}
+.edu-item{position:relative;margin-bottom:2.2rem;padding-left:1.5rem}
+.edu-item:last-child{margin-bottom:0}
+.edu-dot{position:absolute;left:-2.1rem;top:6px;width:12px;height:12px;border-radius:50%;background:var(--bg);border:2px solid var(--accent2);transition:border-color .3s,background .3s}
+.edu-item:hover .edu-dot{background:var(--accent2);border-color:var(--accent)}
+.edu-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.6rem 1.8rem;transition:border-color .3s,transform .3s;position:relative;overflow:hidden}
+.edu-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:var(--grad);transform:scaleX(0);transform-origin:left;transition:transform .4s}
+.edu-item:hover .edu-card{border-color:rgba(124,92,252,.35);transform:translateX(4px)}
+.edu-item:hover .edu-card::before{transform:scaleX(1)}
+.edu-top{display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;margin-bottom:.8rem;flex-wrap:wrap}
+.edu-degree{font-family:'Clash Display',sans-serif;font-size:1.1rem;font-weight:600;letter-spacing:-.4px;color:var(--text);margin-bottom:.2rem}
+.edu-school{font-size:13px;color:var(--accent);font-weight:500}
+.edu-year{font-size:11px;color:var(--muted);border:1px solid var(--border2);padding:4px 12px;border-radius:100px;white-space:nowrap;align-self:flex-start}
+.edu-meta{display:flex;gap:.7rem;flex-wrap:wrap;margin-top:.8rem}
+.edu-badge{font-size:11px;padding:4px 12px;border-radius:6px;font-weight:500}
+.edu-badge-board{background:rgba(124,92,252,.1);color:#b89cff;border:1px solid rgba(124,92,252,.2)}
+.edu-badge-score{background:rgba(0,229,255,.08);color:#00e5ff;border:1px solid rgba(0,229,255,.15)}
+.edu-badge-status{background:rgba(255,107,107,.08);color:#ff8f8f;border:1px solid rgba(255,107,107,.15)}
+.edu-desc{font-size:13px;color:var(--muted2);line-height:1.7;margin-top:.6rem}
+
+/* ── THINGS I LOVE ──────────────────────────── */
+.loves-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.2rem}
+.love-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1.8rem;position:relative;overflow:hidden;transition:border-color .3s,transform .3s;cursor:default}
+.love-card::after{content:'';position:absolute;inset:0;background:radial-gradient(circle at 80% 20%, var(--love-glow, rgba(124,92,252,.06)), transparent 60%);pointer-events:none;transition:opacity .4s;opacity:0}
+.love-card:hover{transform:translateY(-4px)}
+.love-card:hover::after{opacity:1}
+.love-card-1{--love-glow:rgba(124,92,252,.1)}
+.love-card-2{--love-glow:rgba(0,229,255,.1)}
+.love-card-3{--love-glow:rgba(255,107,107,.08)}
+.love-card-4{--love-glow:rgba(124,92,252,.08)}
+.love-card-5{--love-glow:rgba(0,229,255,.08)}
+.love-icon-wrap{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:1rem;border:1px solid var(--border)}
+.love-card-1 .love-icon-wrap{background:rgba(124,92,252,.1);border-color:rgba(124,92,252,.2)}
+.love-card-2 .love-icon-wrap{background:rgba(0,229,255,.08);border-color:rgba(0,229,255,.15)}
+.love-card-3 .love-icon-wrap{background:rgba(255,107,107,.08);border-color:rgba(255,107,107,.15)}
+.love-card-4 .love-icon-wrap{background:rgba(124,92,252,.08);border-color:rgba(124,92,252,.2)}
+.love-card-5 .love-icon-wrap{background:rgba(0,229,255,.06);border-color:rgba(0,229,255,.12)}
+.love-title{font-family:'Clash Display',sans-serif;font-size:1.05rem;font-weight:600;letter-spacing:-.3px;margin-bottom:.5rem;color:var(--text)}
+.love-desc{font-size:13px;line-height:1.75;color:var(--muted2)}
+.love-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:.9rem}
+.love-tag{font-size:10px;padding:3px 10px;border-radius:100px;background:var(--bg3);color:var(--muted2);border:1px solid rgba(255,255,255,.06);letter-spacing:.04em}
+
+/* ── PROJECTS ───────────────────────────────── */
+.projects-list{display:flex;flex-direction:column;gap:1.5rem}
+.project-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:2rem;transition:border-color .3s,transform .3s;position:relative;overflow:hidden}
+.project-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:var(--grad);transform:scaleX(0);transform-origin:left;transition:transform .4s}
+.project-card:hover{border-color:rgba(124,92,252,.35);transform:translateY(-3px)}
+.project-card:hover::before{transform:scaleX(1)}
+.project-top{display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;margin-bottom:1rem;flex-wrap:wrap}
+.project-title-group{}
+.project-num{font-size:11px;letter-spacing:.2em;color:var(--muted);text-transform:uppercase;margin-bottom:.3rem}
+.project-title{font-family:'Clash Display',sans-serif;font-size:1.25rem;font-weight:600;letter-spacing:-.5px;color:var(--text)}
+.project-date{font-size:11px;color:var(--muted);border:1px solid var(--border2);padding:4px 12px;border-radius:100px;white-space:nowrap}
+.project-desc{font-size:14px;line-height:1.8;color:var(--muted2);margin-bottom:1.2rem}
+.project-footer{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem}
+.project-tags{display:flex;flex-wrap:wrap;gap:6px}
+.tag{font-size:11px;padding:4px 12px;border-radius:100px;font-weight:500}
+.tag-purple{background:rgba(124,92,252,.12);color:#b89cff;border:1px solid rgba(124,92,252,.2)}
+.tag-cyan{background:rgba(0,229,255,.08);color:#00e5ff;border:1px solid rgba(0,229,255,.15)}
+.tag-red{background:rgba(255,107,107,.08);color:#ff8f8f;border:1px solid rgba(255,107,107,.15)}
+.project-link{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:500;color:var(--accent);text-decoration:none;letter-spacing:.04em;border:1px solid var(--border2);padding:6px 14px;border-radius:6px;transition:all .2s}
+.project-link:hover{background:rgba(0,229,255,.06);border-color:var(--accent)}
+.project-link-placeholder{font-size:12px;color:var(--muted);font-style:italic}
+
+/* ── SKILLS ─────────────────────────────────── */
+.skills-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem}
+.skill-group{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1.4rem}
+.skill-group-title{font-size:10px;font-weight:700;letter-spacing:.2em;color:var(--accent2);text-transform:uppercase;margin-bottom:1rem;display:flex;align-items:center;gap:8px}
+.skill-group-title::after{content:'';flex:1;height:1px;background:rgba(124,92,252,.15)}
+.skill-pills{display:flex;flex-wrap:wrap;gap:7px}
+.skill-pill{font-size:12px;padding:5px 13px;border-radius:6px;background:var(--bg3);color:var(--muted2);border:1px solid rgba(255,255,255,.06);transition:all .2s;font-weight:400}
+.skill-pill:hover{color:var(--text);border-color:var(--border2);background:rgba(0,229,255,.04)}
+
+/* ── CERTIFICATIONS ─────────────────────────── */
+.certs-list{display:flex;flex-direction:column;gap:1rem}
+.cert-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.4rem 1.6rem;display:flex;align-items:center;justify-content:space-between;gap:1.5rem;transition:border-color .2s,transform .2s;flex-wrap:wrap}
+.cert-card:hover{border-color:rgba(0,229,255,.25);transform:translateX(4px)}
+.cert-left{display:flex;align-items:center;gap:14px}
+.cert-badge{width:42px;height:42px;border-radius:10px;background:rgba(0,229,255,.08);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.cert-title{font-size:14px;font-weight:500;margin-bottom:3px;color:var(--text)}
+.cert-meta{font-size:12px;color:var(--muted)}
+.cert-date{font-size:11px;color:var(--accent2);border:1px solid rgba(124,92,252,.2);padding:3px 10px;border-radius:100px;white-space:nowrap}
+.cert-link{display:inline-flex;align-items:center;gap:5px;font-size:12px;color:var(--accent);text-decoration:none;transition:opacity .2s;margin-top:4px}
+.cert-link:hover{opacity:.7}
+.cert-link-placeholder{font-size:11px;color:var(--muted);font-style:italic}
+
+/* ── CONTACT ────────────────────────────────── */
+.contact-wrapper{display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:start}
+.contact-intro{font-size:15px;line-height:1.8;color:var(--muted2);margin-bottom:2rem}
+.contact-intro strong{color:var(--text)}
+.contact-channels{display:flex;flex-direction:column;gap:.8rem}
+.contact-item{display:flex;align-items:center;gap:14px;background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:1rem 1.2rem;transition:border-color .2s}
+.contact-item:hover{border-color:var(--border2)}
+.contact-icon{width:38px;height:38px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.contact-icon.email{background:rgba(255,107,107,.1)}
+.contact-icon.linkedin{background:rgba(0,229,255,.08)}
+.contact-icon.github{background:rgba(124,92,252,.1)}
+.contact-icon.cv{background:rgba(0,229,255,.08)}
+.contact-label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:2px}
+.contact-value{font-size:13px;color:var(--muted2)}
+.contact-value a{color:var(--accent);text-decoration:none}
+.contact-value.placeholder{color:var(--muted);font-style:italic;font-size:12px}
+.contact-right{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:2rem}
+.contact-right h3{font-family:'Clash Display',sans-serif;font-size:1.3rem;font-weight:600;letter-spacing:-.5px;margin-bottom:.5rem}
+.contact-right p{font-size:13px;color:var(--muted2);line-height:1.7;margin-bottom:1.5rem}
+.contact-form-fields{display:flex;flex-direction:column;gap:.8rem}
+.form-input{width:100%;padding:10px 14px;border-radius:8px;background:var(--bg3);border:1px solid var(--border);color:var(--text);font-family:'Cabinet Grotesk',sans-serif;font-size:14px;outline:none;transition:border-color .2s}
+.form-input:focus{border-color:rgba(0,229,255,.35)}
+.form-input::placeholder{color:var(--muted)}
+textarea.form-input{resize:vertical;min-height:100px}
+.btn-send{width:100%;padding:12px;background:var(--grad);color:#fff;border:none;border-radius:8px;font-family:'Cabinet Grotesk',sans-serif;font-size:14px;font-weight:500;cursor:pointer;letter-spacing:.04em;transition:opacity .2s;margin-top:.3rem}
+.btn-send:hover{opacity:.88}
+
+/* ── CV SECTION ─────────────────────────────── */
+.cv-box{background:linear-gradient(135deg,rgba(124,92,252,.08),rgba(0,229,255,.06));border:1px solid rgba(124,92,252,.25);border-radius:16px;padding:2.5rem 3rem;display:flex;justify-content:space-between;align-items:center;gap:2rem;flex-wrap:wrap}
+.cv-text h3{font-family:'Clash Display',sans-serif;font-size:1.5rem;font-weight:700;letter-spacing:-.5px;margin-bottom:.4rem}
+.cv-text p{font-size:14px;color:var(--muted2)}
+.cv-actions{display:flex;gap:10px;flex-wrap:wrap}
+
+/* ── FOOTER ─────────────────────────────────── */
+footer{padding:2rem 3rem;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem}
+.footer-left{font-size:13px;color:var(--muted)}
+.footer-left strong{color:var(--accent2)}
+.footer-right{font-size:12px;color:var(--muted);letter-spacing:.05em}
+
+/* ── ANIMATIONS ─────────────────────────────── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.reveal{opacity:0;transform:translateY(20px);transition:opacity .7s ease,transform .7s ease}
+.reveal.visible{opacity:1;transform:none}
+
+/* ── RESPONSIVE ─────────────────────────────── */
+@media(max-width:768px){
+  nav{padding:0 1.5rem}
+  .nav-links{display:none}
+  .hero{padding:5rem 1.5rem 3rem}
+  .section{padding:4rem 1.5rem}
+  .about-grid{grid-template-columns:1fr}
+  .contact-wrapper{grid-template-columns:1fr}
+  .cv-box{flex-direction:column;align-items:flex-start;padding:1.5rem}
+  footer{flex-direction:column;text-align:center;padding:1.5rem}
+  .hero-name{letter-spacing:-2px}
+  .loves-grid{grid-template-columns:1fr}
+  .education-timeline{padding-left:1.4rem}
+}
+
+/* ── ABOUT PHOTO ─────────────────────────── */
+.about-photo {
+  width: 200px;
+  height: 200px;
+  background: transparent;
+  border: 2px dashed var(--border2);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  object-fit: cover;
+}
+
+.about-photo::after {
+  content: '';
+}
+</style>
+</head>
+<body>
+
+<!-- Cursor -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">VS</div>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#education">Education</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#certifications">Certifications</a></li>
+    <li><a href="#loves">Interests</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="blob blob1"></div>
+  <div class="blob blob2"></div>
+  <div class="hero-grid-line v gl1"></div>
+  <div class="hero-grid-line v gl2"></div>
+  <div class="hero-grid-line h gl3"></div>
+  <div class="hero-grid-line h gl4"></div>
+
+  <div class="hero-eyebrow">
+    <div class="eyebrow-dot"></div>
+    <span class="eyebrow-text">Available for opportunities</span>
+  </div>
+
+  <h1 class="hero-name">
+    Vivek <span class="line2">Seth.</span>
+  </h1>
+  <p class="hero-tagline">ML Enthusiast &amp; <span>Full-Stack Developer</span></p>
+  <p class="hero-bio">I am a Computer Science student at Lovely Professional University — building everything from real-time multiplayer games to unsupervised ML systems for NASA datasets. I write code that ships and systems that think.</p>
+  <div class="hero-cta">
+    <a href="#projects" class="btn btn-primary">View Projects ↓</a>
+    <a href="#contact" class="btn btn-ghost">Get in Touch</a>
+    <a href="#cv" class="btn btn-ghost">Download CV ↓</a>
+  </div>
+
+  <div class="hero-scroll-hint">Scroll down</div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ABOUT -->
+<section class="section reveal" id="about">
+  <div class="section-header">
+    <div class="section-label">Who I am</div>
+    <h2 class="section-title">About me</h2>
+  </div>
+
+  <div class="about-grid">
+    
+    <!-- LEFT SIDE TEXT -->
+    <div class="about-intro">
+      <p>Hey! I'm <strong>Vivek Seth</strong>, a passionate Computer Science student specializing in full-stack web development and machine learning. I love turning complex problems into clean, efficient solutions.</p>
+      <p>From building <strong>real-time multiplayer games</strong> powered by Socket.IO to developing <strong>unsupervised ML systems</strong> that detect sensor drift — I thrive on projects that challenge both my engineering and analytical skills.</p>
+      <p>When I'm not coding, I'm exploring the latest in <strong>Generative AI</strong>, contributing to open-source, and leveling up my DSA skills in C++.</p>
+    </div>
+
+    <!-- RIGHT SIDE PHOTO + CARDS -->
+    <div>
+      
+      <!-- PHOTO PLACEHOLDER -->
+      <img src="C:\Users\vivek\Downloads\IMG_20250214_182522.jpg" class="about-photo">
+
+      <!-- INFO CARDS -->
+      <div class="about-cards" style="margin-top:1.5rem">
+        <div class="info-card">
+          <div class="label">University</div>
+          <div class="value">Lovely Professional University</div>
+        </div>
+        <div class="info-card">
+          <div class="label">Degree</div>
+          <div class="value">B.Tech — CS/IT</div>
+        </div>
+        <div class="info-card">
+          <div class="label">Year</div>
+          <div class="value accent">3rd Year</div>
+        </div>
+        <div class="info-card">
+          <div class="label">CGPA</div>
+          <div class="value accent">6.66</div>
+        </div>
+        <div class="info-card" style="grid-column:span 2">
+          <div class="label">Focus Areas</div>
+          <div class="value">ML/AI | Full Stack Developer | Real-time Systems</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- EDUCATION -->
+<section class="section reveal" id="education">
+  <div class="section-header">
+    <div class="section-label">Academic Journey</div>
+    <h2 class="section-title">Education</h2>
+  </div>
+
+  <div class="education-timeline">
+
+    <!-- B.Tech -->
+    <div class="edu-item">
+      <div class="edu-dot"></div>
+      <div class="edu-card">
+        <div class="edu-top">
+          <div>
+            <div class="edu-degree">B.Tech — Computer Science &amp; Engineering</div>
+            <div class="edu-school">Lovely Professional University, Punjab</div>
+          </div>
+          <span class="edu-year">2022 – 2026</span>
+        </div>
+        <p class="edu-desc">Pursuing a Bachelor of Technology with a focus on software engineering, machine learning, and full-stack development. Actively working on real-world projects spanning AI systems and real-time web applications.</p>
+        <div class="edu-meta">
+          <span class="edu-badge edu-badge-board">B.Tech CSE</span>
+          <span class="edu-badge edu-badge-score">CGPA — 6.66</span>
+          <span class="edu-badge edu-badge-status">3rd Year · Ongoing</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Class 12 -->
+    <div class="edu-item">
+      <div class="edu-dot"></div>
+      <div class="edu-card">
+        <div class="edu-top">
+          <div>
+            <div class="edu-degree">Class XII — Senior Secondary</div>
+            <div class="edu-school">[ Ghanshyam Hemlata Vidya Mandir School ] <!-- fill in --></div>
+          </div>
+          <span class="edu-year">[ Year: 2021-2022 ] <!-- e.g. 2021–2022 --></span>
+        </div>
+        <p class="edu-desc">Completed senior secondary education with a focus on Science (PCM). Developed a strong foundation in mathematics and logical reasoning.</p>
+        <div class="edu-meta">
+          <span class="edu-badge edu-badge-board">[ Board: CBSE ] <!-- CBSE / ICSE / State --></span>
+          <span class="edu-badge edu-badge-score">[ Percentage: 70 ] <!-- fill in --></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Class 10 -->
+    <div class="edu-item">
+      <div class="edu-dot"></div>
+      <div class="edu-card">
+        <div class="edu-top">
+          <div>
+            <div class="edu-degree">Class X — Secondary</div>
+            <div class="edu-school">[ Saint Thomas English School ] <!-- fill in --></div>
+          </div>
+          <span class="edu-year">[ Year: 2019-2020 ] <!-- e.g. 2019–2020 --></span>
+        </div>
+        <p class="edu-desc">Completed secondary education with distinction. Discovered an early interest in computers and programming that shaped the course of my academic journey.</p>
+        <div class="edu-meta">
+          <span class="edu-badge edu-badge-board">[ Board: ICSE ] <!-- CBSE / ICSE / State --></span>
+          <span class="edu-badge edu-badge-score">[ Percentage: 84 ] <!-- fill in --></span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- PROJECTS -->
+<section class="section reveal" id="projects">
+  <div class="section-header">
+    <div class="section-label">What I've built</div>
+    <h2 class="section-title">Projects</h2>
+  </div>
+  <div class="projects-list">
+
+    <div class="project-card">
+      <div class="project-top">
+        <div class="project-title-group">
+          <div class="project-num">Project 01</div>
+          <div class="project-title">Khelo – Multiplayer Dice Rolling Game</div>
+        </div>
+        <span class="project-date">Jul 2025</span>
+      </div>
+      <p class="project-desc">
+        A real-time multiplayer dice game where users compete by rolling dice in rounds. Players join via unique Game IDs and play in head-to-head or group modes with automatic score tracking and history. The game runs in the browser with smooth animations, real-time updates, and full host/player controls — powered by WebSockets for zero-latency synchronization.
+      </p>
+      <div class="project-footer">
+        <div class="project-tags">
+          <span class="tag tag-cyan">HTML5 / CSS3</span>
+          <span class="tag tag-cyan">Vanilla JavaScript</span>
+          <span class="tag tag-purple">Node.js / Express</span>
+          <span class="tag tag-purple">Socket.IO</span>
+          <span class="tag tag-red">C++</span>
+        </div>
+        <a href="https://khelo-eight.vercel.app/" target="_blank" class="cert-link"> Link</a>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <div class="project-top">
+        <div class="project-title-group">
+          <div class="project-num">Project 02</div>
+          <div class="project-title">DigLibrary – Library Management System</div>
+        </div>
+        <span class="project-date">Mar 2025</span>
+      </div>
+      <p class="project-desc">
+        Designed and implemented a full-featured library management system to streamline book borrowing and return processes. Developed backend logic for managing book inventory, user registrations, loans, and returns using efficient data structures and database integration. Features a clean web frontend with complete CRUD operations.
+      </p>
+      <div class="project-footer">
+        <div class="project-tags">
+          <span class="tag tag-red">C++</span>
+          <span class="tag tag-cyan">JavaScript</span>
+          <span class="tag tag-cyan">HTML / CSS</span>
+          <span class="tag tag-purple">Node.js</span>
+        </div>
+        <a href="https://library-management-system-i9dv.vercel.app/" target="_blank" class="cert-link"> Link</a></span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- SKILLS -->
+<section class="section reveal" id="skills">
+  <div class="section-header">
+    <div class="section-label">What I know</div>
+    <h2 class="section-title">Skills</h2>
+  </div>
+  <div class="skills-grid">
+    <div class="skill-group">
+      <div class="skill-group-title">Languages</div>
+      <div class="skill-pills">
+        <span class="skill-pill">C++</span>
+        <span class="skill-pill">Python</span>
+        <span class="skill-pill">C</span>
+        <span class="skill-pill">Java</span>
+        <span class="skill-pill">JavaScript</span>
+        <span class="skill-pill">SQL</span>
+      </div>
+    </div>
+    <div class="skill-group">
+      <div class="skill-group-title">Frontend</div>
+      <div class="skill-pills">
+        <span class="skill-pill">HTML5</span>
+        <span class="skill-pill">CSS3</span>
+        <span class="skill-pill">Bootstrap</span>
+        <span class="skill-pill">Vanilla JS</span>
+      </div>
+    </div>
+    <div class="skill-group">
+      <div class="skill-group-title">Backend & Runtime</div>
+      <div class="skill-pills">
+        <span class="skill-pill">Node.js</span>
+        <span class="skill-pill">Express.js</span>
+        <span class="skill-pill">Socket.IO</span>
+        <span class="skill-pill">REST APIs</span>
+      </div>
+    </div>
+    <div class="skill-group">
+      <div class="skill-group-title">ML / AI</div>
+      <div class="skill-pills">
+        <span class="skill-pill">TensorFlow</span>
+        <span class="skill-pill">Scikit-learn</span>
+        <span class="skill-pill">OpenCV</span>
+        <span class="skill-pill">NumPy</span>
+        <span class="skill-pill">Pandas</span>
+      </div>
+    </div>
+    <div class="skill-group">
+      <div class="skill-group-title">Databases</div>
+      <div class="skill-pills">
+        <span class="skill-pill">MongoDB</span>
+        <span class="skill-pill">MS SQL Server</span>
+      </div>
+    </div>
+    <div class="skill-group">
+      <div class="skill-group-title">Tools & Concepts</div>
+      <div class="skill-pills">
+        <span class="skill-pill">Git / GitHub</span>
+        <span class="skill-pill">Postman</span>
+        <span class="skill-pill">Vercel</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- CERTIFICATIONS -->
+<section class="section reveal" id="certifications">
+  <div class="section-header">
+    <div class="section-label">Credentials</div>
+    <h2 class="section-title">Certifications</h2>
+  </div>
+  <div class="certs-list">
+
+    <div class="cert-card">
+      <div class="cert-left">
+        <div class="cert-badge">🤖</div>
+        <div>
+          <div class="cert-title">Build Generative AI Apps and Solutions with No-Code Tools</div>
+          <div class="cert-meta">Infosys Springboard</div>
+          <span class="cert-link-placeholder"><a href="https://drive.google.com/file/d/1D84VnQDFZB8CoWzpoVkoTPki8Kf1HRm8/view" target="_blank" class="cert-link">View Certificate</a></span>
+        </div>
+      </div>
+      <span class="cert-date">Aug 2025</span>
+    </div>
+
+    <div class="cert-card">
+      <div class="cert-left">
+        <div class="cert-badge">💬</div>
+        <div>
+          <div class="cert-title">ChatGPT-4 Prompt Engineering: ChatGPT, Generative AI & LLM</div>
+          <div class="cert-meta">Infosys Springboard</div>
+          <span class="cert-link-placeholder"><a href="https://drive.google.com/file/d/1zJ6oXr7KyGh0ac86gz-ZBGSlpdxksclg/view" target="_blank" class="cert-link">View Certificate</a></span>
+        </div>
+      </div>
+      <span class="cert-date">Aug 2025</span>
+    </div>
+
+    <div class="cert-card">
+      <div class="cert-left">
+        <div class="cert-badge">✨</div>
+        <div>
+          <div class="cert-title">Master Generative AI &amp; Generative AI Tools (ChatGPT &amp; more)</div>
+          <div class="cert-meta">Udemy</div>
+          <span class="cert-link-placeholder"><a href="https://drive.google.com/file/d/1F1fo2mMUgK-HaJiU1TFZ80TAzZ86mb4c/view" target="_blank" class="cert-link">View Certificate</a></span>
+        </div>
+      </div>
+      <span class="cert-date">Aug 2025</span>
+    </div>
+
+    <div class="cert-card">
+      <div class="cert-left">
+        <div class="cert-badge">⚡</div>
+        <div>
+          <div class="cert-title">Data Structure &amp; Algorithm using CPP</div>
+          <div class="cert-meta">CipherSchools</div>
+          <span class="cert-link-placeholder"><a href="https://www.cipherschools.com/certificate/preview?id=688e1003cec61f8eee565e89" target="_blank" class="cert-link">View Certificate</a></span>
+        </div>
+      </div>
+      <span class="cert-date">Jun 2025</span>
+    </div>
+
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- THINGS I LOVE -->
+<section class="section reveal" id="loves">
+  <div class="section-header">
+    <div class="section-label">Beyond the code</div>
+    <h2 class="section-title">Things I love</h2>
+  </div>
+
+  <div class="loves-grid">
+
+    <!-- Open Source -->
+    <div class="love-card love-card-1">
+      <div class="love-icon-wrap">🌐</div>
+      <div class="love-title">Open-Source Contributing</div>
+      <p class="love-desc">There's something deeply satisfying about fixing a bug that helps thousands of developers you'll never meet. I actively explore open-source repos, contribute fixes, and believe in building in public.</p>
+      <div class="love-tags">
+        <span class="love-tag">GitHub</span>
+        <span class="love-tag">Pull Requests</span>
+        <span class="love-tag">Community</span>
+      </div>
+    </div>
+
+    <!-- AI/ML Research -->
+    <div class="love-card love-card-2">
+      <div class="love-icon-wrap">🧠</div>
+      <div class="love-title">Exploring AI / ML Research</div>
+      <p class="love-desc">From reading papers on arXiv to tinkering with autoencoders on NASA datasets — I'm fascinated by how machines learn patterns humans can't see. Generative AI and unsupervised learning are my current obsessions.</p>
+      <div class="love-tags">
+        <span class="love-tag">arXiv Papers</span>
+        <span class="love-tag">Generative AI</span>
+        <span class="love-tag">Deep Learning</span>
+      </div>
+    </div>
+
+    <!-- Writing -->
+    <div class="love-card love-card-3">
+      <div class="love-icon-wrap">✍️</div>
+      <div class="love-title">Writing</div>
+      <p class="love-desc">Writing helps me think clearly. Whether it's documenting a project, drafting technical breakdowns, or jotting down ideas — I find that putting thoughts into words sharpens both my communication and my code.</p>
+      <div class="love-tags">
+        <span class="love-tag">Technical Docs</span>
+        <span class="love-tag">Blogs</span>
+        <span class="love-tag">Clarity of thought</span>
+      </div>
+    </div>
+
+    <!-- DSA -->
+    <div class="love-card love-card-4">
+      <div class="love-icon-wrap">⚡</div>
+      <div class="love-title">Solving DSA Problems</div>
+      <p class="love-desc">Cracking a hard graph problem or optimising a brute-force to O(log n) is its own kind of thrill. I grind DSA in C++ regularly — it keeps my thinking sharp and my solutions elegant.</p>
+      <div class="love-tags">
+        <span class="love-tag">C++</span>
+        <span class="love-tag">LeetCode</span>
+        <span class="love-tag">Algorithms</span>
+        <span class="love-tag">Data Structures</span>
+      </div>
+    </div>
+
+    <!-- Designing -->
+    <div class="love-card love-card-5">
+      <div class="love-icon-wrap">🎨</div>
+      <div class="love-title">UI / Visual Design</div>
+      <p class="love-desc">Code should look as good as it runs. I'm drawn to designing clean, expressive interfaces — obsessing over spacing, typography, motion, and colour until everything just feels right.</p>
+      <div class="love-tags">
+        <span class="love-tag">UI Design</span>
+        <span class="love-tag">CSS Animations</span>
+        <span class="love-tag">Typography</span>
+        <span class="love-tag">Figma</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- CV -->
+<section class="section reveal" id="cv">
+  <div class="cv-box">
+    <div class="cv-text">
+      <h3>Want my full résumé?</h3>
+      <p>Download my CV for a complete overview of my education, projects, skills, and certifications.</p>
+    </div>
+    <div class="cv-actions">
+      <a href="https://drive.google.com/uc?export=download&id=1em-ubTkFt0iL6a0ghuOohLAnBF11n4RT" class="btn btn-primary">↓ Download CV</a>
+      <a href="https://drive.google.com/file/d/1em-ubTkFt0iL6a0ghuOohLAnBF11n4RT/view" class="btn btn-ghost">View online</a>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- CONTACT -->
+<section class="section reveal" id="contact">
+  <div class="section-header">
+    <div class="section-label">Let's connect</div>
+    <h2 class="section-title">Get in touch</h2>
+  </div>
+  <div class="contact-wrapper">
+    <div>
+      <p class="contact-intro">Open to <strong>internships</strong>, collaborative projects, and exciting opportunities. Whether you have a question or just want to say hi — my inbox is always open!</p>
+      <div class="contact-channels">
+        <div class="contact-item">
+          <div class="contact-icon email">✉</div>
+          <div>
+            <div class="contact-label">Email</div>
+            <div class="contact-value placeholder">vivekjsg589@gmail.com</div>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon linkedin">in</div>
+          <div>
+            <div class="contact-label">LinkedIn</div>
+            <div class="contact-value placeholder"><a href="https://www.linkedin.com/in/vivek-seth-5a0555274/" target="_blank">View Profile</a></div>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon github">⌥</div>
+          <div>
+            <div class="contact-label">GitHub</div>
+            <div class="contact-value placeholder"><a href="https://github.com/vivek7996" target="_blank">View GitHub</a></div>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon cv">↓</div>
+          <div>
+            <div class="contact-label">CV / Résumé</div>
+            <div class="contact-value placeholder"><a href="https://drive.google.com/file/d/1em-ubTkFt0iL6a0ghuOohLAnBF11n4RT/view" class="btn btn-ghost">Link</a></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="contact-right">
+      <h3>Send a message</h3>
+      <p>Fill this in and I'll get back to you shortly.</p>
+      <div class="contact-form-fields">
+        <form action="https://formspree.io/f/xjgpwgva" method="POST">
+          <input type="hidden" name="_redirect" value="false" />
+          <input type="hidden" name="_append" value="false" />
+          <input class="form-input" type="text" name="name" placeholder="Your name" required />
+          <input class="form-input" type="email" name="email" placeholder="Your email" required />
+          <input class="form-input" type="text" name="subject" placeholder="Subject" required />
+          <textarea class="form-input" name="message" placeholder="Your message..." required></textarea>
+          <button class="btn-send" type="submit">Send Message →</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-left">Designed &amp; built by <strong>Vivek Seth</strong> · B.Tech CS, LPU · 2025</div>
+  <div class="footer-right">Full-Stack Developer · ML Enthusiast</div>
+</footer>
+
+<script>
+// Custom Cursor
+const cursor = document.getElementById('cursor');
+const ring = document.getElementById('cursorRing');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cursor.style.left=mx+'px';cursor.style.top=my+'px'});
+function animRing(){rx+=(mx-rx)*.12;ry+=(my-ry)*.12;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(animRing)}
+animRing();
+document.querySelectorAll('a,button,.project-card,.cert-card,.skill-pill,.love-card,.edu-card').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{cursor.style.width='16px';cursor.style.height='16px';ring.style.width='50px';ring.style.height='50px'});
+  el.addEventListener('mouseleave',()=>{cursor.style.width='10px';cursor.style.height='10px';ring.style.width='36px';ring.style.height='36px'});
+});
+
+// Reveal on scroll
+const reveals = document.querySelectorAll('.reveal');
+const obs = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target)}})
+},{threshold:.12});
+reveals.forEach(r=>obs.observe(r));
+
+// Active nav link
+const sections = document.querySelectorAll('section[id]');
+const navLinks = document.querySelectorAll('.nav-links a');
+const navObs = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      navLinks.forEach(l=>l.style.color='');
+      const active = document.querySelector(`.nav-links a[href="#${e.target.id}"]`);
+      if(active) active.style.color='var(--accent)';
+    }
+  })
+},{threshold:.4});
+sections.forEach(s=>navObs.observe(s));
+</script>
+</body>
+</html>
